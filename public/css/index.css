@@ -1,0 +1,95 @@
+:root{
+    --color-primary: #54176D; /*MORADO DE IDEAS PRINCIPAL*/
+    --color-secondary: #F2F2F2; /*GRIS - OPCIONAL*/
+    --color-third: #ffffff; /*BLANCO*/
+    --color-letters: #000000; /*NEGRO*/
+    --font-primary: "Poppins", sans-serif;
+    --font-weight-normal: 400;
+    background: radial-gradient(125% 125% at 50% 10%, #000 50%, #54176D 100%);
+}
+
+
+html{
+    display: flex;
+     max-height: 100%;
+     height: 100vh;
+     align-items: center;
+     justify-content: center;
+}
+body{
+    
+
+    line-height: 0%;
+    box-sizing: none;
+    box-shadow: none;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    
+}
+
+.contenedor01{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-primary);
+    padding: 50px;
+    margin: 0 auto;
+    align-items: center;
+    padding: 0;
+    position: relative;
+    border-radius: 15px;
+    justify-items: center;
+    justify-content: center;
+}
+.formulario{
+    justify-content: center;
+    align-items: center;
+}
+.formulario-dentro{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    
+}
+
+.usu-1 input{
+    padding: 10px 15px;
+    width: 275px;   
+    border-radius: 10px;
+}
+.con-1 input{
+    padding: 10px 15px;
+    width: 275px;
+    border-radius: 10px;
+}
+.boton-1 button{
+    width: 275px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+@media (max-width: 576px) {
+  
+}
+@media (min-width: 576px) and (max-width: 991px) {
+  
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  
+}
+@media (min-width: 1200px) {
+  .contenedor01{
+    width: 280px;
+    height: auto;
+    padding: 25px 30px;
+
+  }
+}

@@ -1,0 +1,120 @@
+<?php
+require_once __DIR__ . '/../models/DashboardModel.php';
+
+class DashboardController {
+    private $model;
+
+    public function __construct() {
+        $this->model = new DashboardModel();
+    }
+
+    public function index() {
+        $csvPath = __DIR__ . '/../public/data/datos.csv';
+        $data = $this->model->getCsvData($csvPath);
+
+        // Extraer datos únicos de ASESOR y FASE
+        /* ==========================
+           1) FASES ALCANZADAS POR ASESOR
+        ========================== */
+        $asesores = array_unique(array_column($data, 'ASESOR'));
+        $fases    = array_unique(array_column($data, 'FASE'));
+
+        // Inicializar conteo
+        $conteo = [];
+        foreach ($asesores as $asesor) {
+            foreach ($fases as $fase) {
+                $conteo[$asesor][$fase] = 0;
+            }
+        }
+
+        // Contar fases por asesor
+        foreach ($data as $fila) {
+            if (!isset($fila['ASESOR']) || !isset($fila['FASE'])) continue;
+            $asesor = $fila['ASESOR'];
+            $fase   = $fila['FASE'];
+            $conteo[$asesor][$fase]++;
+        }
+
+        // Preparar Chart.js
+        $labels = array_values($fases);
+        $datasets = [];
+        foreach ($asesores as $asesor) {
+            $datasets[] = [
+                "label" => $asesor,
+                "data" => array_values($conteo[$asesor]),
+                "backgroundColor" => sprintf(
+                    'rgba(%d,%d,%d,0.6)',
+                    rand(0,255), rand(0,255), rand(0,255)
+                )
+            ];
+        }
+
+        $labelsJson = json_encode($labels, JSON_UNESCAPED_UNICODE);
+        $datasetsJson = json_encode($datasets, JSON_UNESCAPED_UNICODE);
+        /* ==========================
+           2) LEADS POR PROGRAMA
+        ========================== */
+        $programas = array_unique(array_column($data, 'PROGRAMA'));
+        $conteoVP = array_fill_keys($programas, 0);
+
+        foreach ($data as $fila) {
+            if (!isset($fila['PROGRAMA'])) continue;
+            $conteoVP[$fila['PROGRAMA']]++;
+        }
+
+        $labelsVP   = json_encode(array_keys($conteoVP), JSON_UNESCAPED_UNICODE);
+        $datasetsVP = json_encode([[
+            "label" => "Leads   ",
+            "data" => array_values($conteoVP),
+            "backgroundColor" => sprintf(
+                    'rgba(%d,%d,%d,0.6)',
+                    rand(0,255), rand(0,255), rand(0,255)
+                )
+        ]], JSON_UNESCAPED_UNICODE);
+
+
+        /* ==========================
+        3) SEGUIMIENTO EFECTIVO
+        ========================== */
+        $dias = ["SEGUIMIENTO DIA 1", "SEGUIMIENTO DIA 2", "SEGUIMIENTO DIA 3", "SEGUIMIENTO DIA 4", "SEGUIMIENTO DIA 5"];
+        $asesores = array_map('strtoupper', array_values($asesores));  
+        // Inicializar matriz [asesor][dia] = 0
+        $seguimiento = [];
+        foreach ($asesores as $asesor) {
+            foreach ($dias as $dia) {
+                $seguimiento[$asesor][$dia] = 0;
+            }
+        }
+
+        // Contar seguimientos realizados
+        foreach ($data as $fila) {
+            if (!isset($fila['ASESOR'])) continue;
+            $asesor = $fila['ASESOR'];
+            foreach ($dias as $dia) {
+                if (!empty($fila[$dia])) {
+                    $seguimiento[$asesor][$dia]++;
+                }
+            }
+        }
+
+        // Preparar data estilo "heatmap"
+        $heatmapData = [];
+        foreach ($asesores as $asesor) {
+            foreach ($dias as $i => $dia) {
+                $heatmapData[] = [
+                    "x" => $dia,
+                    "y" => $asesor,
+                    "v" => $seguimiento[$asesor][$dia]
+                ];
+            }
+        }
+
+        $heatmapJson = json_encode($heatmapData, JSON_UNESCAPED_UNICODE);
+        $asesoresJson  = json_encode($asesores, JSON_UNESCAPED_UNICODE);
+        /* ==========================
+        Render a la vista
+        ========================== */
+        require __DIR__ . '/../view/AdmDashboard/index.php';
+    }
+}
+?>
