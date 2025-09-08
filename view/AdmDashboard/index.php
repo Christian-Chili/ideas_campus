@@ -1,4 +1,8 @@
-
+<?php
+  //Llamamos al archivo de conexion.php
+  require_once __DIR__ . '/../../config/connection.php';
+  if(isset($_SESSION["admin_id"])){
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -167,3 +171,8 @@
 </script>
 </body>
 </html>
+<?php
+  }else{
+    header("Location:".Conectar::route()."view/404/");
+  }
+?>
