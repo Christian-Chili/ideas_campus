@@ -108,6 +108,7 @@
     const datasets = <?php echo $datasetsJson; ?>;
 
     const ctx = document.getElementById('venta_x_asesor').getContext('2d');
+    const isMobile = window.innerWidth <= 794; // detectar celular
     new Chart(ctx, {
         type: 'bar',
         data: { 
@@ -116,6 +117,8 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: isMobile ? false : true, // 👈 desactiva proporción fija
+            aspectRatio: isMobile ? 1 : 2,    
             plugins: {
                 title: {
                     display: true,
@@ -135,6 +138,10 @@
                 }, 
                 y: { 
                     beginAtZero: true,
+                    suggestedMax: 21, // 👈 fuerza hasta 20
+                    ticks: {
+                        stepSize: isMobile ? 1 : 5    // 👈 muestra 0,5,10,15,20
+                    },
                     title: {
                         display: true,
                         text: 'Cantidad'
@@ -213,7 +220,7 @@
         }
     }
     });
-    //** 4.-sdasd */
+    //** 4.-leads por fecha*/
     const ctx3 = document.getElementById('leadsTiempo').getContext('2d');
     new Chart(ctx3, {
         type: 'line',
