@@ -9,7 +9,7 @@ class DashboardController {
     }
 
     public function index() {
-        $csvPath = __DIR__ . '/../public/data/datos.csv';
+        $csvPath = __DIR__ . '/../public/data/datos_3.csv';
         $data = $this->model->getCsvData($csvPath);
 
         // Extraer datos únicos de ASESOR y FASE
@@ -54,23 +54,35 @@ class DashboardController {
         /* ==========================
            2) LEADS POR PROGRAMA
         ========================== */
-        $programas = array_unique(array_column($data, 'PROGRAMA'));
-        $conteoVP = array_fill_keys($programas, 0);
+    // tu conteo (mantén tu lógica)
+    $programas = array_unique(array_column($data, 'PROGRAMA'));
+    $conteoVP = array_fill_keys($programas, 0);
 
-        foreach ($data as $fila) {
-            if (!isset($fila['PROGRAMA'])) continue;
-            $conteoVP[$fila['PROGRAMA']]++;
-        }
+    foreach ($data as $fila) {
+        if (!isset($fila['PROGRAMA'])) continue;
+        $conteoVP[$fila['PROGRAMA']]++;
+    }
 
-        $labelsVP   = json_encode(array_keys($conteoVP), JSON_UNESCAPED_UNICODE);
-        $datasetsVP = json_encode([[
-            "label" => "Leads   ",
-            "data" => array_values($conteoVP),
-            "backgroundColor" => sprintf(
-                    'rgba(%d,%d,%d,0.6)',
-                    rand(0,255), rand(0,255), rand(0,255)
-                )
-        ]], JSON_UNESCAPED_UNICODE);
+    $labelsVP = json_encode(array_keys($conteoVP), JSON_UNESCAPED_UNICODE);
+
+    // Opción A: colores equidistantes HSL
+    $backgroundColors = [];
+    $n = count($conteoVP);
+    $i = 0;
+    foreach ($conteoVP as $programa => $cnt) {
+        $h = round(($i * 360) / max(1, $n)); // evita división por cero
+        $backgroundColors[] = "hsla($h,70%,50%,0.6)";
+        $i++;
+    }
+
+    $datasetsVP = json_encode([[
+        "label" => "Leads",
+        "data" => array_values($conteoVP),
+        "backgroundColor" => $backgroundColors,
+        "borderColor" => "rgba(255,255,255,0.8)",
+        "borderWidth" => 1
+    ]], JSON_UNESCAPED_UNICODE);
+
 
 
         /* ==========================
@@ -111,6 +123,31 @@ class DashboardController {
 
         $heatmapJson = json_encode($heatmapData, JSON_UNESCAPED_UNICODE);
         $asesoresJson  = json_encode($asesores, JSON_UNESCAPED_UNICODE);
+                /* ==========================
+        4) LEADS POR FECHA
+        ========================== */
+
+        $leadsporfecha = [];
+
+        foreach ($data as $row) {
+        $fecha = $row['FECHA'];
+            if (!empty($fecha)) {
+        // Agrupamos por fecha
+                if (!isset($leadsPorFecha[$fecha])) {
+                    $leadsPorFecha[$fecha] = 0;
+                }
+            $leadsPorFecha[$fecha]++;
+            }
+        }
+        // Ordenar por fecha (importante para el gráfico)
+        ksort($leadsPorFecha);
+
+        $labelsFechas = array_keys($leadsPorFecha);
+        $valuesFechas = array_values($leadsPorFecha);
+
+        $labelsFechasJson = json_encode($labelsFechas, JSON_UNESCAPED_UNICODE);
+        $valuesFechasJson = json_encode($valuesFechas, JSON_UNESCAPED_UNICODE);
+
         /* ==========================
         Render a la vista
         ========================== */

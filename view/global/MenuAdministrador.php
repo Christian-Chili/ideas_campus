@@ -8,12 +8,6 @@
             <span class="menu-item-label">Dashboard</span>
           </div>
         </a>
-        <a href="#" class="br-menu-link">
-          <div class="br-menu-item">
-            <i class="menu-item-icon icon ion-android-upload tx-24"></i>
-            <span class="menu-item-label">Actualizar Data</span>
-          </div>
-        </a>
         <a href="/DASHBOARD-IDEAS-CAMPUS/view/global/Logout.php" class="br-menu-link">
           <div class="br-menu-item">
             <i class="menu-item-icon icon ion-android-exit tx-24"></i>

@@ -1,0 +1,16 @@
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/jquery/jquery.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/popper.js/popper.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/bootstrap/bootstrap.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/moment/moment.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/jquery-switchbutton/jquery.switchButton.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/peity/jquery.peity.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/js/bracket.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/datatables/jquery.dataTables.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/lib/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/datatables/dataTables.buttons.min.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/datatables/dataTables.buttons.min.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/datatables/buttons.colVis.min.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/datatables/dataTables.buttons.min.js"></script>
+    <script src="/DASHBOARD-IDEAS-CAMPUS/public/datatables/buttons.html5.min.js"></script>

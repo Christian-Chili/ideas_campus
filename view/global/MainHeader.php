@@ -6,19 +6,12 @@
       
       <div class="br-header-right">
         <nav class="nav">
-          <div class="dropdown">
+          <div class="dropdown" style="display:flex; flex-direction:row; gap:2px; align-items:center; justify-content:center; margin: 0 auto;">
             <a href="" class="nav-link nav-link-profile" data-toggle="dropdown">
-              <span class="logged-name hidden-md-down"><?php echo $_SESSION["admin_name"]; ?></span>
-              <img src="http://via.placeholder.com/64x64" class="wd-32 rounded-circle" alt="">
-              <span class="square-10 bg-success"></span>
+              <span class="logged-name hidden-md-down" style="font-family:Poppins, 'sans-serif'; font-size:15px; color:black;">Hola, <span style="font-weight:600;"><?php echo $_SESSION["admin_name"];?></span></span>
             </a>
             <input type="hidden" id="usu_idx" value="<?php echo $SESSION["admin_id"]?>"> <!-- ADMIN_ID DEL USUARIO -->
-            <div class="dropdown-menu dropdown-menu-header wd-200">
-              <ul class="list-unstyled user-profile-nav">
-                <li><a href="../AdmPerfil/"><i class="icon ion-ios-person"></i> Perfil</a></li>
-                <li><a href="../html/Logout.php"><i class="icon ion-power"></i> Cerrar Sesión</a></li>
-              </ul>
-            </div>
+
           </div>
         </nav>
       </div>
