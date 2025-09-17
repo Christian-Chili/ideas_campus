@@ -9,7 +9,7 @@ class DashboardController {
     }
 
     public function index() {
-        $csvPath = __DIR__ . '/../public/data/datos_3.csv';
+        $csvPath = __DIR__ . '/../public/data/datos.csv';
         $data = $this->model->getCsvData($csvPath);
 
         // Extraer datos únicos de ASESOR y FASE
@@ -151,7 +151,94 @@ class DashboardController {
         /* ==========================
         Render a la vista
         ========================== */
-        require __DIR__ . '/../view/AdmDashboard/index.php';
+        
+        
+
+        
+
+
+        /** holaaaa*/
+
+
+    /* ==========================
+       5) LEADS POR PROGRAMA POR SEMANA
+    ========================== */
+    $leadsPorProgramaSemana = [];
+    foreach ($data as $fila) {
+        if (empty($fila['PROGRAMA']) || empty($fila['FECHA'])) continue;
+        $programa = $fila['PROGRAMA'];
+        $semana   = date('o-W', strtotime($fila['FECHA'])); // formato Año-Semana
+        $leadsPorProgramaSemana[$programa][$semana] = 
+            ($leadsPorProgramaSemana[$programa][$semana] ?? 0) + 1;
+    }
+
+    $labelsSemana = [];
+    $datasetsSemana = [];
+    foreach ($leadsPorProgramaSemana as $programa => $valores) {
+        ksort($valores); // ordenar semanas
+        $labelsSemana = array_keys($valores);
+        $datasetsSemana[] = [
+            "label" => $programa,
+            "data" => array_values($valores),
+            "fill" => false,
+            "borderColor" => sprintf(
+                'rgba(%d,%d,%d,1)',
+                rand(0,255), rand(0,255), rand(0,255)
+            )
+        ];
+    }
+
+    /* ==========================
+       6) LEADS TOTAL POR SEMANA / LANZAMIENTO / CURSO / FASE
+    ========================== */
+    $leadsCompleto = [];
+    foreach ($data as $fila) {
+        if (empty($fila['FECHA']) || empty($fila['LANZAMIENTO']) || empty($fila['CURSO']) || empty($fila['FASE'])) continue;
+        $semana = date('o-W', strtotime($fila['FECHA']));
+        $clave = $fila['LANZAMIENTO'] . '-' . $fila['CURSO'] . '-' . $fila['FASE'];
+        $leadsCompleto[$clave][$semana] = ($leadsCompleto[$clave][$semana] ?? 0) + 1;
+    }
+
+    /* ==========================
+       7) LEADS POR PROGRAMA / FASE / ASESOR
+    ========================== */
+    $leadsProgramaFaseAsesor = [];
+    foreach ($data as $fila) {
+        if (empty($fila['PROGRAMA']) || empty($fila['FASE']) || empty($fila['ASESOR'])) continue;
+        $leadsProgramaFaseAsesor[$fila['PROGRAMA']][$fila['FASE']][$fila['ASESOR']] =
+            ($leadsProgramaFaseAsesor[$fila['PROGRAMA']][$fila['FASE']][$fila['ASESOR']] ?? 0) + 1;
+    }
+
+    /* ==========================
+       8) BASE TOTAL POR ASESOR / FASE / FECHA INICIO
+    ========================== */
+    $baseAsesorFaseFecha = [];
+    foreach ($data as $fila) {
+        if (empty($fila['ASESOR']) || empty($fila['FASE']) || empty($fila['FECHA'])) continue;
+        $fecha = date('Y-m-d', strtotime($fila['FECHA']));
+        $baseAsesorFaseFecha[$fila['ASESOR']][$fila['FASE']][$fecha] =
+            ($baseAsesorFaseFecha[$fila['ASESOR']][$fila['FASE']][$fecha] ?? 0) + 1;
+    }
+
+    // Convertir a JSON
+    $labelsSemanaJson = json_encode($labelsSemana, JSON_UNESCAPED_UNICODE);
+    $datasetsSemanaJson = json_encode($datasetsSemana, JSON_UNESCAPED_UNICODE);
+
+    $leadsCompletoJson = json_encode($leadsCompleto, JSON_UNESCAPED_UNICODE);
+    $leadsProgramaFaseAsesorJson = json_encode($leadsProgramaFaseAsesor, JSON_UNESCAPED_UNICODE);
+    $baseAsesorFaseFechaJson = json_encode($baseAsesorFaseFecha, JSON_UNESCAPED_UNICODE);
+
+    include __DIR__ . '/../views/dashboard.php';
+    require __DIR__ . '/../view/AdmDashboard/index.php';
+
+
+
+
+        /** hollaaaaa  */
+
+        
+
+
     }
 }
 ?>

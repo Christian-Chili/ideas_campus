@@ -90,6 +90,74 @@
                     </div>
                 </div> 
             </div>
+            <div class="row-grid5">
+                <div class="br-pagebody">
+                    <div class="br-section-wrapper">
+                        <h6 class="tx-gray-800 tx-bold tx-14 mg-b-10">Evaluación semanal/mensual</h6>
+                        <hr>
+                        <canvas id="leads_programa_semana" style=""></canvas>
+                        <!-- <div class="seguimiento-sub">
+                            <p class="seguimiento-titulo">Mayor número de seguimientos por asesora</p>
+                            <p class="seguimientos-all">Seguimiento 1: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 2: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 3: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 4: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 5: <span></span></p>
+                        </div> -->
+                    </div>
+                </div> 
+            </div>
+            <div class="row-grid6">
+                <div class="br-pagebody">
+                    <div class="br-section-wrapper">
+                        <h6 class="tx-gray-800 tx-bold tx-14 mg-b-10">Evaluación semanal/mensual</h6>
+                        <hr>
+                        <canvas id="leads_programa_fase_semana" style=""></canvas>
+                        <!-- <div class="seguimiento-sub">
+                            <p class="seguimiento-titulo">Mayor número de seguimientos por asesora</p>
+                            <p class="seguimientos-all">Seguimiento 1: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 2: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 3: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 4: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 5: <span></span></p>
+                        </div> -->
+                    </div>
+                </div> 
+            </div>
+            <div class="row-grid7">
+                <div class="br-pagebody">
+                    <div class="br-section-wrapper">
+                        <h6 class="tx-gray-800 tx-bold tx-14 mg-b-10">Evaluación semanal/mensual</h6>
+                        <hr>
+                        <canvas id="leads_programa_fase_asesor" style=""></canvas>
+                        <!-- <div class="seguimiento-sub">
+                            <p class="seguimiento-titulo">Mayor número de seguimientos por asesora</p>
+                            <p class="seguimientos-all">Seguimiento 1: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 2: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 3: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 4: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 5: <span></span></p>
+                        </div> -->
+                    </div>
+                </div> 
+            </div>
+            <div class="row-grid8">
+                <div class="br-pagebody">
+                    <div class="br-section-wrapper">
+                        <h6 class="tx-gray-800 tx-bold tx-14 mg-b-10">Evaluación semanal/mensual</h6>
+                        <hr>
+                        <canvas id="base_asesor_fase_fecha" style=""></canvas>
+                        <!-- <div class="seguimiento-sub">
+                            <p class="seguimiento-titulo">Mayor número de seguimientos por asesora</p>
+                            <p class="seguimientos-all">Seguimiento 1: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 2: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 3: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 4: <span></span></p>
+                            <p class="seguimientos-all">Seguimiento 5: <span></span></p>
+                        </div> -->
+                    </div>
+                </div> 
+            </div>
         </div>
         
      
@@ -259,8 +327,138 @@
             }
         }
     });
+    /** 5.-Leads por programa por sermana */
+    const labelsSemana = <?php echo $labelsSemanaJson; ?>;
+    const datasetsSemana = <?php echo $datasetsSemanaJson; ?>;
 
+    new Chart(document.getElementById('leads_programa_semana').getContext('2d'), {
+        type: 'line',
+        data: { labels: labelsSemana, datasets: datasetsSemana },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Leads por programa por semana' }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+    /** 6.- Leads por programa_fase_semana */
+    const leadsCompleto = <?php echo $leadsCompletoJson; ?>;
+    const labels2 = [...new Set(Object.values(leadsCompleto).flatMap(obj => Object.keys(obj)))];
+    const datasets2 = Object.keys(leadsCompleto).map((clave, idx) => {
+        return {
+            label: clave,
+            data: labels2.map(sem => leadsCompleto[clave][sem] ?? 0),
+            backgroundColor: `rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},0.6)`
+        };
+    });
 
+    new Chart(document.getElementById('leads_programa_fase_semana').getContext('2d'), {
+        type: 'bar',
+        data: { labels: labels2, datasets: datasets2 },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Leads por programa y fase por semana' },
+                legend: { position: 'top' }
+            },
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true }
+            }
+        }
+    });
+    /** 7.- leads_programa_fase_asesor*/
+    const data3 = <?php echo $leadsProgramaFaseAsesorJson; ?>;
+
+    // Preparamos: cada combinación PROGRAMA+FASE es un grupo, con barras por ASESOR
+    let labels3 = [];
+    let datasets3 = {};
+    for (const programa in data3) {
+        for (const fase in data3[programa]) {
+            const group = programa + ' - ' + fase;
+            labels3.push(group);
+            for (const asesor in data3[programa][fase]) {
+                if (!datasets3[asesor]) {
+                    datasets3[asesor] = {
+                        label: asesor,
+                        data: [],
+                        backgroundColor: `rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},0.6)`
+                    };
+                }
+            }
+        }
+    }
+
+    // Rellenar los datos alineados
+    for (const programa in data3) {
+        for (const fase in data3[programa]) {
+            const group = programa + ' - ' + fase;
+            for (const asesor in datasets3) {
+                const valor = data3[programa][fase][asesor] ?? 0;
+                datasets3[asesor].data.push(valor);
+            }
+        }
+    }
+
+    new Chart(document.getElementById('leads_programa_fase_asesor').getContext('2d'), {
+        type: 'bar',
+        data: { labels: labels3, datasets: Object.values(datasets3) },
+        options: {
+            responsive: true,
+            aspectRatio: 1,
+            plugins: {
+                title: { display: true, text: 'Leads por programa / fase / asesor' },
+                legend: { position: 'top' }
+            },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+    /** 8.- base total por asesor_fecha_fase*/
+    const data4 = <?php echo $baseAsesorFaseFechaJson; ?>;
+
+    // Sacamos todas las fechas
+    let labels4 = [...new Set(Object.values(data4).flatMap(fases => 
+        Object.values(fases).flatMap(obj => Object.keys(obj))
+    ))].sort();
+
+    // Construimos datasets por ASESOR+FASE
+    let datasets4 = [];
+    for (const asesor in data4) {
+        for (const fase in data4[asesor]) {
+            const dataset = {
+                label: asesor + ' - ' + fase,
+                data: labels4.map(fecha => data4[asesor][fase][fecha] ?? 0),
+                borderColor: `rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},1)`,
+                fill: false
+            };
+            datasets4.push(dataset);
+        }
+    }
+
+    new Chart(document.getElementById('base_asesor_fase_fecha').getContext('2d'), {
+        type: 'line',
+        data: { labels: labels4, datasets: datasets4 },
+        options: {
+            responsive: true,
+            aspectRatio: 1,
+            plugins: {
+                title: { display: true, text: 'Base total por asesor / fase / fecha' }
+            },
+            scales: { 
+                x: {
+                    stacked:false,
+                },
+                y: { 
+                    beginAtZero: true, 
+                    suggestedMax:5,
+                }
+                
+        }
+        }
+    });
 
 </script>
 <?php require_once __DIR__ . '/../global/MainJs.php'; ?>
