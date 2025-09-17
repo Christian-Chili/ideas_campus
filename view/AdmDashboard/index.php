@@ -186,7 +186,7 @@
         options: {
             responsive: true,
             maintainAspectRatio: isMobile ? false : true, // 👈 desactiva proporción fija
-            aspectRatio: isMobile ? 1 : 2,    
+            aspectRatio: isMobile ? 1 : 1,    
             plugins: {
                 title: {
                     display: true,
@@ -227,7 +227,7 @@
         },
         options: {
             responsive: true,
-             
+            aspectRatio: 1,
             plugins: { 
                 legend: {
                 display: true,
@@ -279,6 +279,7 @@
             labels: <?php echo json_encode($asesores, JSON_UNESCAPED_UNICODE); ?>
         }
         },
+        aspectRatio: 1,
         plugins: {
         tooltip: {
             callbacks: {
@@ -307,6 +308,7 @@
         },
         options: {
             responsive: true,
+            aspectRatio: 1,
             plugins: {
                 title: {
                     display: true,
@@ -336,6 +338,7 @@
         data: { labels: labelsSemana, datasets: datasetsSemana },
         options: {
             responsive: true,
+            aspectRatio: 1,
             plugins: {
                 title: { display: true, text: 'Leads por programa por semana' }
             },
@@ -360,6 +363,7 @@
         data: { labels: labels2, datasets: datasets2 },
         options: {
             responsive: true,
+            aspectRatio: 1,
             plugins: {
                 title: { display: true, text: 'Leads por programa y fase por semana' },
                 legend: { position: 'top' }
